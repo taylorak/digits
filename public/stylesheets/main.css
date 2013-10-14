@@ -1,3 +1,10 @@
-body {
-  padding-top: 70px;  /* Move body of page below navbar. */
+.header {
+  background: url('../images/header.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 250px;
+}
+
+.navbar {
+  border-radius: 0px;
 }
