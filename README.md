@@ -1,5 +1,5 @@
 ![screenshot](https://raw.github.com/taylorak/digits/Attempt-1/public/images/home.png)
-![screenshot](https://raw.github.com/taylorak/digits/Attempt-1/public/images/newcontent.png)
+![screenshot](https://raw.github.com/taylorak/digits/Attempt-1/public/images/newcontact.png)
 
 ##Overview
 This is a Play application that provides a list of contacts.
@@ -7,6 +7,7 @@ This is a Play application that provides a list of contacts.
 ```
 git clone https://github.com/taylorak/digits.git  
 cd digits  
+git checkout Attempt-1  
 play  
 run
 ```  
