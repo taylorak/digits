@@ -4,7 +4,7 @@
 @Main("New Contact") {
 <div class="container">
   @form(routes.Application.postContact(), 'class -> "form-horizontal") {
-  <div class="form-group">
+  <div class="form-group if(@ContactForm("firstName").hasErrors) {has-error})">
     <label for="first" class="col-lg-2 control-label">First</label>
     <div class="col-lg-10">
       <input type="text" class="form-control" 
@@ -12,10 +12,11 @@
         id="@ContactForm("firstName").id" 
         value="@ContactForm("firstName").value" 
         placeholder="First Name">
+        <span class="help-block">@{ContactForm("firstName").error.map { error => error.message }}</span>
     </div>
   </div>
 
-  <div class="form-group">
+  <div class="form-group if(@ContactForm("firstName").hasErrors) {has-error})">
     <label for="last" class="col-lg-2 control-label">Last</label>
     <div class="col-lg-10">
       <input type="text" class="form-control" 
@@ -23,10 +24,12 @@
         id="@ContactForm("lastName").id" 
         value="@ContactForm("lastName").value" 
         placeholder="Last Name">
+        <span class="help-block">@{ContactForm("lastName").error.map { error => error.message }}</span>
+        
     </div>
   </div>
 
-  <div class="form-group">
+  <div class="form-group if(@ContactForm("firstName").hasErrors) {has-error})">
     <label for="phone" class="col-lg-2 control-label">Last</label>
     <div class="col-lg-10">
       <input type="tel" class="form-control" 
@@ -34,6 +37,7 @@
         id="@ContactForm("digits").id" 
         value="@ContactForm("digits").value" 
         placeholder="808-123-4567">
+        <span class="help-block">@{ContactForm("digits").error.map { error => error.message }}</span>
     </div>
   </div>
 
