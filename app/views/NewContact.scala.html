@@ -4,7 +4,7 @@
 @Main("New Contact") {
 <div class="container">
   @form(routes.Application.postContact(), 'class -> "form-horizontal") {
-  <div class="form-group if(@ContactForm("firstName").hasErrors) {has-error})">
+  <div class="form-group @if(ContactForm("firstName").hasErrors) {has-error})">
     <label for="first" class="col-lg-2 control-label">First</label>
     <div class="col-lg-10">
       <input type="text" class="form-control" 
@@ -16,7 +16,7 @@
     </div>
   </div>
 
-  <div class="form-group if(@ContactForm("firstName").hasErrors) {has-error})">
+  <div class="form-group @if(ContactForm("firstName").hasErrors) {has-error})">
     <label for="last" class="col-lg-2 control-label">Last</label>
     <div class="col-lg-10">
       <input type="text" class="form-control" 
@@ -29,7 +29,7 @@
     </div>
   </div>
 
-  <div class="form-group if(@ContactForm("firstName").hasErrors) {has-error})">
+  <div class="form-group @if(ContactForm("firstName").hasErrors) {has-error})">
     <label for="phone" class="col-lg-2 control-label">Last</label>
     <div class="col-lg-10">
       <input type="tel" class="form-control" 
