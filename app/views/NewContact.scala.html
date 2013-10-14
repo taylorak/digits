@@ -27,7 +27,7 @@
   </div>
 
   <div class="form-group">
-    <label for="phone" class="col-lg-2 control-label">Last</label>
+    <label for="phone" class="col-lg-2 control-label">Phone</label>
     <div class="col-lg-10">
       <input type="tel" class="form-control" 
         name="@ContactForm("digits").name" 
@@ -37,9 +37,20 @@
     </div>
   </div>
 
+ <div class="form-group">
+    <label for="address" class="col-lg-2 control-label">Address</label>
+    <div class="col-lg-10">
+      <input type="address" class="form-control" 
+        name="@ContactForm("address").name" 
+        id="@ContactForm("address").id" 
+        value="@ContactForm("address").value" 
+        placeholder="Address">
+    </div>
+  </div>
+
   <div class="form-group">
     <div class="col-lg-offset-2 col-lg-10">
-      <button type="submit" class="btn btn-default">Sign in</button>
+      <button type="submit" class="btn btn-default">Submit</button>
     </div>
   </div>
 

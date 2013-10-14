@@ -15,6 +15,9 @@ public class ContactFormData {
   
   /**The digits form field.**/
   public String digits = "";
+  
+  /**The address form field.**/
+  public String address = "";
 
 
 }

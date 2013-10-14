@@ -38,7 +38,7 @@ public class Application extends Controller {
   public static Result postContact() {
     Form<ContactFormData> formData = Form.form(ContactFormData.class).bindFromRequest();
     ContactFormData data = formData.get();
-    System.out.println(data.firstName + " " + data.lastName + " " + data.digits);
+    System.out.println(data.firstName + " " + data.lastName + " " + data.digits + " "+ data.address);
     return ok(NewContact.render(formData));
     
   }
