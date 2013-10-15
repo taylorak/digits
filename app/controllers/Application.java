@@ -1,5 +1,5 @@
 package controllers;
-// 23:05
+// 27:27
 
 import models.ContactDB;
 import play.data.Form;
@@ -24,10 +24,12 @@ public class Application extends Controller {
   
   /**
    * Returns newContact, a form for adding contacts.
+   * @param id
    * @return The newContact.
    */
-  public static Result newContact() {
-    Form<ContactFormData> formData = Form.form(ContactFormData.class);
+  public static Result newContact(long id) {
+    ContactFormData data = (id == 0) ? new ContactFormData() : new ContactFormData(ContactDB.getContact(id));
+    Form<ContactFormData> formData = Form.form(ContactFormData.class).fill(data);
     return ok(NewContact.render(formData));
     
   }
@@ -44,7 +46,8 @@ public class Application extends Controller {
     else {
       ContactFormData data = formData.get();
       ContactDB.addContact(data);
-      return ok(NewContact.render(formData));
+      //return ok(NewContact.render(formData));
+      return redirect("/");
     }
     
   }

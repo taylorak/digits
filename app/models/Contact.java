@@ -7,17 +7,20 @@ package models;
  */
 public class Contact {
 
+  private long id;
   private String firstName;
   private String lastName;
   private String digits;
   
   /**
    * Creates a new contact.
+   * @param id
    * @param firstName
    * @param lastName
    * @param digits
    */
-  public Contact(String firstName, String lastName, String digits) {
+  public Contact(long id, String firstName, String lastName, String digits) {
+    this.id = id;
     this.setFirstName(firstName);
     this.setLastName(lastName);
     this.setDigits(digits);
@@ -63,6 +66,13 @@ public class Contact {
    */
   public void setDigits(String digits) {
     this.digits = digits;
+  }
+
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
   }
   
 

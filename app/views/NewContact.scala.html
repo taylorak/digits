@@ -4,6 +4,10 @@
 @Main("New Contact") {
 <div class="container">
   @form(routes.Application.postContact(), 'class -> "form-horizontal") {
+  <input type="hidden"
+        name="@ContactForm("id").name" 
+        id="@ContactForm("id").id" 
+        value="@ContactForm("id").value">
   <div class="form-group @if(ContactForm("firstName").hasErrors) {has-error})">
     <label for="first" class="col-lg-2 control-label">First</label>
     <div class="col-lg-10">

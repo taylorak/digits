@@ -4,7 +4,7 @@
 
 # Home page
 GET     /                           controllers.Application.index()
-GET     /newcontact                      controllers.Application.newContact()
+GET     /newcontact                      controllers.Application.newContact(id:Long ?= 0)
 POST    /postcontact                      controllers.Application.postContact()
 
 
