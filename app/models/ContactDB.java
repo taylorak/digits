@@ -29,6 +29,15 @@ public class ContactDB {
   }
   
   /**
+   * Deletes a contact from in memory database.
+   * @param formData
+   * @return contact
+   */
+  public static void deleteContact(long id) {
+    contacts.remove(id);
+  }
+  
+  /**
    * Return in memory database containing all contacts.
    * @return contacts
    */

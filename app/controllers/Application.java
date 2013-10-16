@@ -35,6 +35,16 @@ public class Application extends Controller {
   }
   
   /**
+   * Returns newContact, a form for adding contacts.
+   * @param id
+   * @return The newContact.
+   */
+  public static Result deleteContact(long id) {
+    ContactDB.deleteContact(id);
+    return ok(Index.render(ContactDB.getContacts()));
+  }
+  
+  /**
    * Returns postContact, handles post for form.
    * @return The postContact.
    */
