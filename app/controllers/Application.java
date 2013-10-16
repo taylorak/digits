@@ -35,9 +35,8 @@ public class Application extends Controller {
   }
   
   /**
-   * Returns newContact, a form for adding contacts.
+   * Deletes a Contact.
    * @param id
-   * @return The newContact.
    */
   public static Result deleteContact(long id) {
     ContactDB.deleteContact(id);

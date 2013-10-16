@@ -30,8 +30,7 @@ public class ContactDB {
   
   /**
    * Deletes a contact from in memory database.
-   * @param formData
-   * @return contact
+   * @param id
    */
   public static void deleteContact(long id) {
     contacts.remove(id);
