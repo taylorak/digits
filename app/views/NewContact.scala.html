@@ -1,49 +1,26 @@
 @(ContactForm: Form[views.formdata.ContactFormData]) 
 @import helper._ 
+@import bootstrap3._
 
 @Main("New Contact") {
 <div class="container">
+
   @form(routes.Application.postContact(), 'class -> "form-horizontal") {
-  <input type="hidden"
-        name="@ContactForm("id").name" 
-        id="@ContactForm("id").id" 
-        value="@ContactForm("id").value">
-  <div class="form-group @if(ContactForm("firstName").hasErrors) {has-error})">
-    <label for="first" class="col-lg-2 control-label">First</label>
-    <div class="col-lg-10">
-      <input type="text" class="form-control" 
-        name="@ContactForm("firstName").name" 
-        id="@ContactForm("firstName").id" 
-        value="@ContactForm("firstName").value" 
-        placeholder="First Name">
-        <span class="help-block">@{ContactForm("firstName").error.map { error => error.message }}</span>
-    </div>
-  </div>
+    @text(ContactForm("FirstName"),
+        label = "FirstName",
+        placeholder = "First Name",
+        help = "Please enter your first name. (required)")
 
-  <div class="form-group @if(ContactForm("firstName").hasErrors) {has-error})">
-    <label for="last" class="col-lg-2 control-label">Last</label>
-    <div class="col-lg-10">
-      <input type="text" class="form-control" 
-        name="@ContactForm("lastName").name" 
-        id="@ContactForm("lastName").id" 
-        value="@ContactForm("lastName").value" 
-        placeholder="Last Name">
-        <span class="help-block">@{ContactForm("lastName").error.map { error => error.message }}</span>
+  @text(ContactForm("LastName"),
+        label = "Last Name",
+        placeholder = "Last Name",
+        help = "Please enter your last name. (required)")
         
-    </div>
-  </div>
-
-  <div class="form-group @if(ContactForm("firstName").hasErrors) {has-error})">
-    <label for="phone" class="col-lg-2 control-label">Last</label>
-    <div class="col-lg-10">
-      <input type="tel" class="form-control" 
-        name="@ContactForm("digits").name" 
-        id="@ContactForm("digits").id" 
-        value="@ContactForm("digits").value" 
-        placeholder="808-123-4567">
-        <span class="help-block">@{ContactForm("digits").error.map { error => error.message }}</span>
-    </div>
-  </div>
+  @text(ContactForm("digits"),
+        label = "digits",
+        placeholder = "XXX-XXX-XXXX",
+        help = "Please enter your phone number. (required)")
+        
 
   <div class="form-group">
     <div class="col-lg-offset-2 col-lg-10">
