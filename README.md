@@ -1,5 +1,5 @@
 ![screenshot](https://raw.github.com/taylorak/digits/Attempt-1/public/images/home.png)
-![screenshot](https://raw.github.com/taylorak/digits/Attempt-1/public/images/newcontact.png)
+![screenshot](https://raw.github.com/taylorak/digits/DigitsTelephone-1/public/images/newcontact.png)
 
 ##Overview
 This is a Play application that provides a list of contacts.
