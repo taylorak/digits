@@ -35,6 +35,21 @@ public class ContactFormData {
   }
   
   /**
+   * Initialize contact form data
+   * @param firstName
+   * @param lastName
+   * @param digits
+   * @param telephoneType
+   */
+  public ContactFormData(String firstName, String lastName, String digits, String telephoneType) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.digits = digits;
+    this.telephoneType = telephoneType;
+  }
+
+
+  /**
    * Create a contact form data object based on contact.
    * @param contact
    */
