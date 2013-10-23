@@ -9,6 +9,7 @@
         <td>First</td>
         <td>Last</td>
         <td>Digits</td>
+        <td>Type</td>
       </tr>
     </thead>
     <tbody>
@@ -16,7 +17,8 @@
       <tr>
         <td>@contact.getFirstName()</td>
         <td>@contact.getLastName()</td>
-        <td>@contact.getDigits</td>
+        <td>@contact.getDigits()</td>
+        <td>@contact.getTelephoneType()</td>
         <td><a href="@routes.Application.newContact(contact.getId())" class="btn btn-warning">Edit</a></td>
         <td><a href="@routes.Application.deleteContact(contact.getId())" class="btn btn-danger">Delete</a></td>
       </tr>
