@@ -21,16 +21,11 @@
         placeholder = "Last Name",
         help = "Please enter your last name. (required)")
         
-  @text(ContactForm("digits"),
-        label = "digits",
-        placeholder = "XXX-XXX-XXXX",
-        help = "Please enter your phone number. (required)")
-        
-  @select(ContactForm("telephoneType"),
-          label = "Type",
+          
+  @telephone(ContactForm("digits"), 
+          ContactForm("telephoneType"),          
           optionMap = TelephoneTypeMap,
-          isMultiple = false,
-          help = "Select your Telephone Type. (required)")
+          isMultiple = false)
           
   <div class="form-group">
     <div class="col-lg-offset-2 col-lg-10">
