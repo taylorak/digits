@@ -15,6 +15,7 @@ import views.html.NewContact;
 //import views.html.Profile;
 import views.formdata.ContactFormData;
 import views.formdata.LoginFormData;
+import views.formdata.RegistrationFormData;
 import views.formdata.TelephoneTypes;
 
 /**
@@ -92,8 +93,9 @@ public class Application extends Controller {
    * @return The Login page. 
    */
   public static Result login() {
-    Form<LoginFormData> formData = Form.form(LoginFormData.class);
-    return ok(Login.render("Login", Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx()), formData));
+    Form<LoginFormData> loginFormData = Form.form(LoginFormData.class);
+    Form<RegistrationFormData> registrationFormData = Form.form(RegistrationFormData.class);
+    return ok(Login.render("Login", Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx()), loginFormData, registrationFormData));
   }
 
   /**
@@ -108,10 +110,12 @@ public class Application extends Controller {
 
     // Get the submitted form data from the request object, and run validation.
     Form<LoginFormData> formData = Form.form(LoginFormData.class).bindFromRequest();
+    Form<RegistrationFormData> registrationFormData = Form.form(RegistrationFormData.class);
+
 
     if (formData.hasErrors()) {
       flash("error", "Login credentials not valid.");
-      return badRequest(Login.render("Login", Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx()), formData));
+      return badRequest(Login.render("Login", Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx()), formData, registrationFormData));
     }
     else {
       // email/password OK, so now we set the session variable and only go to authenticated pages.
