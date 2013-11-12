@@ -121,6 +121,23 @@ public class Application extends Controller {
     }
   }
   
+  public static Result postRegistration() {
+    Form<LoginFormData> loginFormData = Form.form(LoginFormData.class);
+    Form<RegistrationFormData> registrationFormData = Form.form(RegistrationFormData.class).bindFromRequest();
+
+    if (registrationFormData.hasErrors()) {
+      flash("error", "Registration form not valid.");
+      return badRequest(Login.render("Login", Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx()), loginFormData,
+          registrationFormData));
+    }
+    else {
+      UserInfoDB.addUserInfo(registrationFormData.get().name, registrationFormData.get().email,
+          registrationFormData.get().password);
+      session().clear();
+      session("email", registrationFormData.get().email);
+      return redirect(routes.Application.index());
+    }
+  }
   /**
    * Logs out (only for authenticated users) and returns them to the Index page. 
    * @return A redirect to the Index page. 
