@@ -7,6 +7,9 @@ GET     /                           controllers.Application.index()
 GET     /newcontact                      controllers.Application.newContact(id:Long ?= 0)
 POST    /postcontact                      controllers.Application.postContact()
 GET    /delete                      controllers.Application.deleteContact(id:Long)
+GET     /login                      controllers.Application.login()
+POST    /login                      controllers.Application.postLogin()
+GET     /logout                      controllers.Application.logout()
 
 
 # Map static resources from the /public folder to the /assets URL path
