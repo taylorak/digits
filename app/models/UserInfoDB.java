@@ -15,7 +15,7 @@ public class UserInfoDB {
   /**
    * If the admin is defined.
    */
-  public static boolean adminDefined = false;
+  private static boolean adminDefined = false;
 
   /**
    * Defines the Admin user.
@@ -41,6 +41,13 @@ public class UserInfoDB {
     userinfos.put(email, new UserInfo(name, email, password));
   }
   
+  /**
+   * Returns true if an admin is defined
+   * @return adminDefined
+   */
+  public static boolean adminDefined() {
+    return adminDefined;
+  }
   /**
    * Returns true if the email represents a known user.
    * @param email The email.
