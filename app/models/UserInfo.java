@@ -5,9 +5,9 @@ package models;
  * @author Philip Johnson
  */
 public class UserInfo {
- 
-  private String name;
+
   private String email;
+  private String name;
   private String password;
   
   /**

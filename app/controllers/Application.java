@@ -130,7 +130,6 @@ public class Application extends Controller {
     Form<RegistrationFormData> registrationFormData = Form.form(RegistrationFormData.class).bindFromRequest();
 
     if (registrationFormData.hasErrors()) {
-      flash("error", "Registration form not valid.");
       return badRequest(Login.render("Login", Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx()), loginFormData,
           registrationFormData));
     }
