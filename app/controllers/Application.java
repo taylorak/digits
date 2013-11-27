@@ -2,6 +2,7 @@ package controllers;
 // 18: 24
 
 import java.util.Map;
+import models.Contact;
 import models.ContactDB;
 import models.UserInfo;
 import models.UserInfoDB;
@@ -29,12 +30,10 @@ public class Application extends Controller {
    */
   @Security.Authenticated(Secured.class)
   public static Result index() {
-    UserInfo userInfo = UserInfoDB.getUser(request().username());
-    Boolean isLoggedIn = (userInfo != null);
-    String user = userInfo.getEmail();
-    return ok(Index.render("Home", isLoggedIn, userInfo, ContactDB.getContacts(user)));
+    String user = Secured.getUser(ctx());
+    return ok(Index.render("Home", Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx()), ContactDB.getContacts(user)));
   }
-  
+
   /**
    * Returns newContact, a form for adding contacts.
    * @param id
@@ -43,14 +42,14 @@ public class Application extends Controller {
   @Security.Authenticated(Secured.class)
   public static Result newContact(long id) {
     UserInfo userInfo = UserInfoDB.getUser(request().username());
-    Boolean isLoggedIn = (userInfo != null);
     String user = userInfo.getEmail();
-    ContactFormData data = (id == 0) ? new ContactFormData() : new ContactFormData(ContactDB.getContact(user, id));
+    ContactFormData data = (id == -1) ? new ContactFormData() : new ContactFormData(ContactDB.getContact(user, id));
     Form<ContactFormData> formData = Form.form(ContactFormData.class).fill(data);
-    Map<String, Boolean> typeMap = TelephoneTypes.getTypes(data.telephoneType);
-    return ok(NewContact.render("New", isLoggedIn, userInfo, formData, typeMap));
-    
+    Map<String, Boolean> telephoneTypeMap = TelephoneTypes.getTypes(data.telephoneType);
+    return ok(NewContact.render("New", Secured.isLoggedIn(ctx()),
+                                 Secured.getUserInfo(ctx()), formData, telephoneTypeMap));    
   }
+
   
   /**
    * Deletes a Contact.
@@ -59,10 +58,9 @@ public class Application extends Controller {
   @Security.Authenticated(Secured.class)
   public static Result deleteContact(long id) {
     UserInfo userInfo = UserInfoDB.getUser(request().username());
-    Boolean isLoggedIn = (userInfo != null);
     String user = userInfo.getEmail();
-    ContactDB.deleteContact(user, id);
-    return ok(Index.render("Home", isLoggedIn, userInfo, ContactDB.getContacts(user)));
+    Contact.find().ref(id).delete();
+    return ok(Index.render("Home", Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx()), ContactDB.getContacts(user)));
   }
   
   /**
@@ -71,19 +69,20 @@ public class Application extends Controller {
    */
   @Security.Authenticated(Secured.class)
   public static Result postContact() {
-    UserInfo userInfo = UserInfoDB.getUser(request().username());
-    Boolean isLoggedIn = (userInfo != null);
-    String user = userInfo.getEmail();
+
     Form<ContactFormData> formData = Form.form(ContactFormData.class).bindFromRequest();
+    
     if (formData.hasErrors()) {
-      Map<String, Boolean> typeMap = TelephoneTypes.getTypes();
-      return badRequest(NewContact.render("New", isLoggedIn, userInfo, formData, typeMap));
+      //Map<String, Boolean> typeMap = TelephoneTypes.getTypes();
+      return badRequest(NewContact.render("New", Secured.isLoggedIn(ctx()),
+                        Secured.getUserInfo(ctx()), formData, TelephoneTypes.getTypes()));
     } 
     else {
       ContactFormData data = formData.get();
-      Map<String, Boolean> typeMap = TelephoneTypes.getTypes(data.telephoneType);
+      String user = Secured.getUser(ctx());
       ContactDB.addContact(user, data);
-      //return ok(NewContact.render(formData));
+      //return ok(NewContact.render("New", Secured.isLoggedIn(ctx()),
+      //    Secured.getUserInfo(ctx()), formData, typeMap));
       return redirect("/");
     }
   }
@@ -125,6 +124,14 @@ public class Application extends Controller {
     }
   }
   
+  /**
+   * Processes a login form submission from an unauthenticated user. 
+   * First we bind the HTTP POST data to an instance of LoginFormData.
+   * The binding process will invoke the RegistrationFormData.validate() method.
+   * If errors are found, re-render the page, displaying the error data. 
+   * If errors not found, render the page with the good data. 
+   * @return The index page with the results of validation. 
+   */
   public static Result postRegistration() {
     Form<LoginFormData> loginFormData = Form.form(LoginFormData.class);
     Form<RegistrationFormData> registrationFormData = Form.form(RegistrationFormData.class).bindFromRequest();

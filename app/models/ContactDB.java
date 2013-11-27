@@ -1,77 +1,85 @@
 package models;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import views.formdata.ContactFormData;
 
-
 /**
- * Database for holding a list of contacts in memory.
+ * Database for Contacts.
+ *
  * @author taylorak
  *
  */
 public class ContactDB {
-  
-  private static Map<String, Map<Long, Contact>> contacts = new HashMap<String, Map<Long, Contact>>();
-  
-  public static boolean isUser(String user) {
-    return contacts.containsKey(user);
-  }
-  
+
   /**
-   * Creates a new contact and adds it to in memory database.
-   * @param user
-   * @param formData
-   * @return contact
+   * Adds a Contact to the database.
+   *
+   * @param email The user this contact belongs to.
+   * @param formData FormData
    */
-  public static Contact addContact(String user, ContactFormData formData) {
-    long idVal = (formData.id == 0) ? contacts.size() + 1 : formData.id;
-    Contact contact = new Contact(idVal, formData.firstName, formData.lastName, formData.digits, formData.telephoneType);
-    if(!isUser(user)){
-      contacts.put(user, new HashMap<Long, Contact>());
+  public static void addContact(String email, ContactFormData formData) {
+    boolean isNewContact = (formData.id == -1);
+    if (isNewContact) {
+      Contact contact = new Contact(formData.firstName, formData.lastName, formData.digits, formData.telephoneType);
+      UserInfo userInfo = UserInfo.find().where().eq("email", email).findUnique();
+      
+      if (userInfo == null) {
+        throw new RuntimeException("could nof find user: " + email);
+      }
+      
+      userInfo.addContact(contact);
+      contact.setUserInfo(userInfo);
+      contact.save();
+      userInfo.save();
     }
-    contacts.get(user).put(idVal, contact);
-    return contact;
-  }
-  
-  /**
-   * Deletes a contact from in memory database.
-   * @param user
-   * @param id
-   */
-  public static void deleteContact(String user, long id) {
-    if(isUser(user)){
-      contacts.get(user).remove(id);      
+    else {
+      System.out.println(formData.id);
+      Contact contact = Contact.find().byId(formData.id);
+      contact.setFirstName(formData.firstName);
+      contact.setLastName(formData.lastName);
+      contact.setDigits(formData.digits);
+      contact.setTelephoneType(formData.telephoneType);
+      contact.save();
     }
-  }
-  
-  /**
-   * Return in memory database containing all contacts.
-   * @param user
-   * @return contacts
-   */
-  public static List<Contact> getContacts(String user) {
-    if(!isUser(user)){
-      return new ArrayList<>();
-    }
-    return new ArrayList<>(contacts.get(user).values());
   }
 
   /**
-   * Returns contact at specified id.
-   * @param user
-   * @param id
-   * @return contact
+   * Gets the list of contacts.
+   *
+   * @param email The user this contact belongs to.
+   * @return List of Contacts.
    */
-  public static Contact getContact(String user, long id) {
-    Contact contact = contacts.get(user).get(id);
-    if (!isUser(user)) {
-      throw new RuntimeException("Passed a bogus user " + user);
-    }
+  public static List<Contact> getContacts(String email) {
+    System.out.println(email);
+    UserInfo userInfo = UserInfo.find().where().eq("email", email).findUnique();
+    return userInfo.getContacts();
+  }
+
+  /**
+   * Returns true if the suer is defined in the contacts DB.
+   *
+   * @param email The user email.
+   * @return True if the user is defined.
+   */
+  public static boolean isUser(String email) {
+    return (UserInfo.find().where().eq("email", email).findUnique() != null);
+  }
+
+  /**
+   * Gets the Contact with the given id.
+   *
+   * @param email The user this contact belongs to.
+   * @param id Id of the Contact.
+   * @return The Contact with the given id.
+   */
+  public static Contact getContact(String email, long id) {
+    Contact contact = Contact.find().byId(id);
     if (contact == null) {
-      throw new RuntimeException("Passed a bogus id " + id);
+      throw new RuntimeException("Contact ID not found: " + id);
+    }
+    UserInfo userInfo = contact.getUserInfo();
+    if (email != userInfo.getEmail()) {
+      throw new RuntimeException("User not the same on stored with the contact.");
     }
     return contact;
   }

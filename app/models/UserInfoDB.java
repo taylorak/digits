@@ -1,84 +1,78 @@
 package models;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
- * Provides an in-memory repository for UserInfo.
- * Storing credentials in the clear is kind of bogus.
- * @author Philip Johnson
+ * Provides an in-memory repository for UserInfo. Storing credentials in the clear is kind of bogus.
+ *
+ * @author taylorak
  */
 public class UserInfoDB {
-  
-  private static Map<String, UserInfo> userinfos = new HashMap<String, UserInfo>();
-  
-  /**
-   * If the admin is defined.
-   */
-  private static boolean adminDefined = false;
 
   /**
-   * Defines the Admin user.
+   * Defines the admin account if the values are non-null.
    *
-   * @param name Admin name.
-   * @param email Admin email.
-   * @param password Admin password.
+   * @param name The name.
+   * @param email The email.
+   * @param password The password.
    */
   public static void defineAdmin(String name, String email, String password) {
-    if (name != null && email != null && password != null) {
-      addUserInfo(name, email, password);
-      adminDefined = true;
+    if (email != null && email != null && password != null) {
+      UserInfo userInfo = new UserInfo(name, email, password);
+      userInfo.setAdmin(true);
+      userInfo.save();
     }
   }
-   
+
   /**
-   * Adds the specified user to the UserInfoDB.
-   * @param name Their name.
-   * @param email Their email.
-   * @param password Their password. 
-   */
-  public static void addUserInfo(String name, String email, String password) {
-    userinfos.put(email, new UserInfo(name, email, password));
-  }
-  
-  /**
-   * Returns true if an admin is defined
-   * @return adminDefined
+   * Indicates if this system has a defined Admin account.
+   *
+   * @return True if admin is defined.
    */
   public static boolean adminDefined() {
-    return adminDefined;
+    UserInfo userInfo = UserInfo.find().where().eq("isAdmin", true).findUnique();
+    return userInfo != null;
   }
+
+  /**
+   * Adds the specified user to the UserInfoDB.
+   *
+   * @param name Their name.
+   * @param email Their email.
+   * @param password Their password.
+   */
+  public static void addUserInfo(String name, String email, String password) {
+    UserInfo userInfo = new UserInfo(name, email, password);
+    userInfo.save();
+  }
+
   /**
    * Returns true if the email represents a known user.
+   *
    * @param email The email.
    * @return True if known user.
    */
   public static boolean isUser(String email) {
-    return userinfos.containsKey(email);
+    UserInfo userInfo = UserInfo.find().where().eq("email", email).findUnique();
+    return userInfo != null;
   }
 
   /**
    * Returns the UserInfo associated with the email, or null if not found.
+   *
    * @param email The email.
    * @return The UserInfo.
    */
   public static UserInfo getUser(String email) {
-    return userinfos.get((email == null) ? "" : email);
+    return UserInfo.find().where().eq("email", email).findUnique();
   }
 
   /**
    * Returns true if email and password are valid credentials.
-   * @param email The email. 
-   * @param password The password. 
+   *
+   * @param email The email.
+   * @param password The password.
    * @return True if email is a valid user email and password is valid for that email.
    */
   public static boolean isValid(String email, String password) {
-    return ((email != null) 
-            &&
-            (password != null) 
-            &&
-            isUser(email) 
-            &&
-            getUser(email).getPassword().equals(password));
+    return ((email != null) && (password != null) && isUser(email) && getUser(email).getPassword().equals(password));
   }
 }
