@@ -1,7 +1,6 @@
 package controllers;
 
 import models.UserInfo;
-import models.UserInfoDB;
 import play.mvc.Result;
 import play.mvc.Security;
 import play.mvc.Http.Context;
@@ -63,6 +62,6 @@ public class Secured extends Security.Authenticator {
    * @return The UserInfo, or null.
    */
   public static UserInfo getUserInfo(Context ctx) {
-    return (isLoggedIn(ctx) ? UserInfoDB.getUser(getUser(ctx)) : null);
+    return (isLoggedIn(ctx) ? UserInfo.find().where().eq("email", getUser(ctx)).findUnique() : null);
   }
 }

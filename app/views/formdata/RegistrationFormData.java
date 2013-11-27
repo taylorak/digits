@@ -3,7 +3,7 @@ package views.formdata;
 import play.data.validation.ValidationError;
 import java.util.ArrayList;
 import java.util.List;
-import models.UserInfoDB;
+import models.UserInfo;
 
 /**
  * Backing class for the registration form.
@@ -37,7 +37,7 @@ public class RegistrationFormData {
     if (email == null || email.length() == 0) {
       errors.add(new ValidationError("email", "Email is required."));
     }
-    else if (UserInfoDB.isUser(email)) {
+    else if (UserInfo.isUser(email)) {
       errors.add(new ValidationError("email", "Email is already in use."));
     }
     if (password == null || password.length() == 0) {

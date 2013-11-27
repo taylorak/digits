@@ -11,10 +11,6 @@
         @registrationform(routes.Application.postRegistration(), registrationForm("name"), registrationForm("email"), registrationForm("password"))
       </div>
     </div>
-    @if(!models.UserInfoDB.adminDefined) {
-  <div class="alert alert-danger">
-    <strong>Warning! </strong>Administrator user not defined.
-  </div>
-    }
+
   </div>
 }

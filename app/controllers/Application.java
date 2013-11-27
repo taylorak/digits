@@ -2,9 +2,8 @@ package controllers;
 // 18: 24
 
 import java.util.Map;
-import models.ContactDB;
+import models.Contact;
 import models.UserInfo;
-import models.UserInfoDB;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -29,10 +28,8 @@ public class Application extends Controller {
    */
   @Security.Authenticated(Secured.class)
   public static Result index() {
-    UserInfo userInfo = UserInfoDB.getUser(request().username());
-    Boolean isLoggedIn = (userInfo != null);
-    String user = userInfo.getEmail();
-    return ok(Index.render("Home", isLoggedIn, userInfo, ContactDB.getContacts(user)));
+    UserInfo userInfo = UserInfo.find().where().eq("email", request().username()).findUnique();
+    return ok(Index.render("Home", Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx()), userInfo.getContacts()));
   }
   
   /**
@@ -42,13 +39,11 @@ public class Application extends Controller {
    */
   @Security.Authenticated(Secured.class)
   public static Result newContact(long id) {
-    UserInfo userInfo = UserInfoDB.getUser(request().username());
-    Boolean isLoggedIn = (userInfo != null);
-    String user = userInfo.getEmail();
-    ContactFormData data = (id == 0) ? new ContactFormData() : new ContactFormData(ContactDB.getContact(user, id));
+    Contact contact = Contact.find().where().eq("id", id).findUnique();
+    ContactFormData data = (contact == null) ?  new ContactFormData() : new ContactFormData(contact);
     Form<ContactFormData> formData = Form.form(ContactFormData.class).fill(data);
     Map<String, Boolean> typeMap = TelephoneTypes.getTypes(data.telephoneType);
-    return ok(NewContact.render("New", isLoggedIn, userInfo, formData, typeMap));
+    return ok(NewContact.render("New", Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx()), formData, typeMap));
     
   }
   
@@ -58,11 +53,9 @@ public class Application extends Controller {
    */
   @Security.Authenticated(Secured.class)
   public static Result deleteContact(long id) {
-    UserInfo userInfo = UserInfoDB.getUser(request().username());
-    Boolean isLoggedIn = (userInfo != null);
-    String user = userInfo.getEmail();
-    ContactDB.deleteContact(user, id);
-    return ok(Index.render("Home", isLoggedIn, userInfo, ContactDB.getContacts(user)));
+    UserInfo userInfo = UserInfo.find().where().eq("email", request().username()).findUnique();
+    Contact.find().ref(id).delete();
+    return ok(Index.render("Home", Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx()), userInfo.getContacts()));
   }
   
   /**
@@ -71,19 +64,14 @@ public class Application extends Controller {
    */
   @Security.Authenticated(Secured.class)
   public static Result postContact() {
-    UserInfo userInfo = UserInfoDB.getUser(request().username());
-    Boolean isLoggedIn = (userInfo != null);
-    String user = userInfo.getEmail();
     Form<ContactFormData> formData = Form.form(ContactFormData.class).bindFromRequest();
+    UserInfo userInfo = UserInfo.find().where().eq("email", request().username()).findUnique();
     if (formData.hasErrors()) {
-      Map<String, Boolean> typeMap = TelephoneTypes.getTypes();
-      return badRequest(NewContact.render("New", isLoggedIn, userInfo, formData, typeMap));
+      return badRequest(NewContact.render("New", Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx()), formData, TelephoneTypes.getTypes()));
     } 
     else {
       ContactFormData data = formData.get();
-      Map<String, Boolean> typeMap = TelephoneTypes.getTypes(data.telephoneType);
-      ContactDB.addContact(user, data);
-      //return ok(NewContact.render(formData));
+      userInfo.addContact(data.firstName, data.lastName, data.digits, data.telephoneType);
       return redirect("/");
     }
   }
@@ -135,8 +123,9 @@ public class Application extends Controller {
           registrationFormData));
     }
     else {
-      UserInfoDB.addUserInfo(registrationFormData.get().name, registrationFormData.get().email,
+      UserInfo userInfo = new UserInfo(registrationFormData.get().name, registrationFormData.get().email,
           registrationFormData.get().password);
+      userInfo.save();
       session().clear();
       session("email", registrationFormData.get().email);
       return redirect(routes.Application.index());
