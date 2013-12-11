@@ -1,4 +1,4 @@
 /**
  * Provides tests.
  */
-package test;
+package tests;

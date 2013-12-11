@@ -36,15 +36,15 @@
         <ul class="nav navbar-nav navbar-left">
           @if(isLoggedIn) {
           <li class="@("active".when(page == "Home"))"><a href="@routes.Application.index()">Home</a></li>
-          <li class="@("active".when(page == "New"))"><a href="@routes.Application.newContact()">New Contact</a></li>
+          <li class="@("active".when(page == "New"))"><a id="newContact" href="@routes.Application.newContact()">New Contact</a></li>
           }
         </ul>
         <ul class="nav navbar-nav navbar-right">
           @if(isLoggedIn) {
             <li><p class="navbar-text">@userInfo.getEmail()</p></li>
-            <li><a href="@routes.Application.logout()">Logout</a></li>
+            <li><a id="logout" href="@routes.Application.logout()">Logout</a></li>
           } else {
-            <li class="@("active".when(page=="Login"))"><a href="@routes.Application.login()">Login</a></li>
+            <li class="@("active".when(page=="Login"))"><a id="login" href="@routes.Application.login()">Login</a></li>
           }
         </ul>
       </div>

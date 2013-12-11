@@ -8,7 +8,7 @@
         @loginform(routes.Application.postLogin(), loginForm("email"), loginForm("password"))
       </div>
       <div class="col-sm-4">
-        @registrationform(routes.Application.postRegistration(), registrationForm("name"), registrationForm("email"), registrationForm("password"))
+        @registrationform(routes.Application.postRegistration(), registrationForm("registration_name"), registrationForm("registration_email"), registrationForm("registration_pass"))
       </div>
     </div>
     @if(!models.UserInfoDB.adminDefined) {
